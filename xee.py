@@ -3,6 +3,7 @@ import ee
 import xarray
 ee.Initialize()
 
+#%%
 i = ee.ImageCollection(ee.Image("LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318"))
 roi = ee.Geometry.Polygon(
         [[[-122.80785566930156, 38.08703151999987],
@@ -39,3 +40,24 @@ ds = xarray.open_dataset(s2_imgCol,
                          geometry=s2_imgCol.first().geometry(),
                          scale=10,
                     )
+
+
+#%%
+
+imgCol = ee.ImageCollection(
+    ee.Image('projects/global-wetland-watch/assets/labels/COL/top10_label')
+      .setDefaultProjection(crs='EPSG:4326', scale=10))
+
+ds = xarray.open_dataset(imgCol, 
+                         engine='ee', 
+                         projection=imgCol.first().select(0).projection(),
+                        #  crs='EPSG:32610',
+                        #  geometry= i.first().geometry(),
+                         geometry=imgCol.first().geometry(),
+                        #  scale=10,
+                    )
+ds
+
+del ds.label.attrs['dimensions']
+ds.label.to_netcdf('exported_data/Colombia_top10_label_10m.nc')
+

@@ -9,4 +9,6 @@ docs/source/.ipynb_checkpoints
 docs/*.zarr
 __pycache__
 .pytest_cache
-outputs/*nc
+outputs/*.nc
+exported_data
+*.nc
